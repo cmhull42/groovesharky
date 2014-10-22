@@ -54,7 +54,8 @@ def __main__():
 	config = loadConfig()
 
 	downloadDir = config.get("downloadDir", "")
-	os.makedirs(downloadDir)
+	if not os.path.exists(downloadDir):
+		os.makedirs(downloadDir)
 
 	fileTemplate = config.get("fileTemplate", "")
 
