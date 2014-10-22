@@ -1,4 +1,4 @@
-import csv, sys, requests, argparse, os
+import csv, sys, requests, argparse, os, json
 from urllib import quote_plus, unquote_plus
 import youtube_dl
 
