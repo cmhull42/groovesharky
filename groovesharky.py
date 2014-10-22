@@ -7,21 +7,18 @@ BASEURL="http://tinysong.com/a/"
 OPTIONS="?format=json&key="+TINYAPI
 
 # input: songFile, file to read in
-# output: a list of songs, where song is a list in the format songtitle, artist, album
+# output: a list of songs, represented by a dict with keys artist, song, album
 def readSongs(songFile):
 	songs = []
 	with open(songFile) as csvfile:
 		reader = csv.reader(csvfile, dialect=csv.get_dialect('excel'))
 		fields = next(reader)
-		print fields
 		songIndex = fields.index("SongName")
 		artistIndex = fields.index("ArtistName")
 		albumIndex = fields.index("AlbumName")
-		print(songIndex, artistIndex, albumIndex)
 		for row in reader:
-			# no matter what order the data is in, we return song, artist, album
 			if len(row) >= 3:
-				song = [row[songIndex], row[artistIndex], row[albumIndex]]
+				song = {"song": row[songIndex], "artist": row[artistIndex], "album": row[albumIndex]}
 				songs.append(song)
 
 	return songs
@@ -50,10 +47,10 @@ def __main__():
 	if not os.path.isdir(downloadDir):
 		os.mkdir(downloadDir)
 
-	songlist = []
+	songList = []
 
 	try:
-		songlist = readSongs(songfile)
+		songList = readSongs(songfile)
 	except IOError:
 		print("Error: File "+songfile+" could not be opened.")
 		exit()
@@ -61,8 +58,8 @@ def __main__():
 	links = []
 
 	with YoutubeDL({"outtmpl": "%(title)s.%(ext)s"}) as ydl:
-		for song in songlist:
-			link = retrieveLinks(quote_plus(" ".join(song)))
+		for song in songList:
+			link = retrieveLinks(quote_plus(" ".join(song.values())))
 			ydl.download(link)
 
 __main__()
