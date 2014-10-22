@@ -67,7 +67,7 @@ def __main__():
 		print("Error: File "+songfile+" could not be opened.")
 		exit() 	
 
-	with YoutubeDL({"outtmpl": fileTemplate}) as ydl:
+	with youtube_dl.YoutubeDL({"outtmpl": fileTemplate}) as ydl:
 		ydl.add_default_info_extractors()
 		for song in songList:
 			link = retrieveLinks(quote_plus(" ".join(song.values())))
