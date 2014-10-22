@@ -19,7 +19,7 @@ songtemplate = config.get("filetemplate", "")
 
 with youtube_dl.YoutubeDL({"outtmpl": songtemplate}) as ydl:
 	ydl.add_default_info_extractors()
-	ie = ydl.extract_info("http://grooveshark.com/#!/s/This+Is+Twice+Now/4aqiOJ?src=5",
+	ydl.extract_info("http://grooveshark.com/#!/s/This+Is+Twice+Now/4aqiOJ?src=5",
 	 download=True, extra_info={"song": "This Is Twice Now", "artist": "Lydia", "album": ""})
 	# print ie["_type"]
 	# ydl.process_info(ie)

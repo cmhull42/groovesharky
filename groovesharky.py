@@ -30,22 +30,33 @@ def retrieveLinks(encoded_search):
 	r = requests.get(BASEURL+encoded_search+OPTIONS)
 	return r.json()
 
+# returns the contents of the config file
+def loadConfig():
+	config = []
+	with open("config.txt") as conf:
+		config = json.loads(conf.read())
+
+	return config
+
 def __main__():
 
 	if len(sys.argv) == 1:
 		print("Error: pass in file to process")
 		exit()
 
+
 	parser = argparse.ArgumentParser(description="A grooveshark downloader")
 	parser.add_argument("songFile")
-	parser.add_argument("downloadDir")
 	args = parser.parse_args(sys.argv[1:]) # ignore script name
 
 	songfile = args.songFile
 
-	downloadDir = args.downloadDir
-	if not os.path.isdir(downloadDir):
-		os.mkdir(downloadDir)
+	config = loadConfig()
+
+	downloadDir = config.get("downloadDir", "")
+	os.makedirs(downloadDir)
+
+	fileTemplate = config.get("fileTemplate", "")
 
 	songList = []
 
@@ -53,13 +64,12 @@ def __main__():
 		songList = readSongs(songfile)
 	except IOError:
 		print("Error: File "+songfile+" could not be opened.")
-		exit()
+		exit() 	
 
-	links = []
-
-	with YoutubeDL({"outtmpl": "%(title)s.%(ext)s"}) as ydl:
+	with YoutubeDL({"outtmpl": fileTemplate}) as ydl:
+		ydl.add_default_info_extractors()
 		for song in songList:
 			link = retrieveLinks(quote_plus(" ".join(song.values())))
-			ydl.download(link)
+			ydl.extract_info(link, extra_info=song)
 
 __main__()
