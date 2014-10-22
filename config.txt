@@ -1,3 +1,4 @@
 {
-	"filetemplate": "%(artist)s/%(album)s/%(artist)s - %(song)s.%(ext)s"
+	"fileTemplate": "%(artist)s/%(album)s/%(artist)s - %(song)s.%(ext)s"
+	"downloadDir": ""
 }
