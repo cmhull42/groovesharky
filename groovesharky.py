@@ -54,6 +54,9 @@ def __main__():
 	config = loadConfig()
 
 	downloadDir = config.get("downloadDir", "")
+	if downloadDir == "":
+		downloadDir = "."
+
 	if not os.path.exists(downloadDir):
 		os.makedirs(downloadDir)
 
@@ -67,7 +70,7 @@ def __main__():
 		print("Error: File "+songfile+" could not be opened.")
 		exit() 	
 
-	with youtube_dl.YoutubeDL({"outtmpl": fileTemplate}) as ydl:
+	with youtube_dl.YoutubeDL({"outtmpl": os.path.join(downloadDir, fileTemplate)}) as ydl:
 		ydl.add_default_info_extractors()
 		for song in songList:
 			link = retrieveLinks(quote_plus(" ".join(song.values())))
